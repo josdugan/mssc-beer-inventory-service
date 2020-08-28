@@ -22,6 +22,8 @@ public class BeerInventoryBootstrap implements CommandLineRunner {
     public static final UUID BEER_2_UUID = UUID.fromString("017235b7-3d29-43e1-9a00-3057c41a0bb6");
     public static final UUID BEER_3_UUID = UUID.fromString("33e6c476-1e80-478f-a64b-23524c0219e4");
 
+    public static final int QUANTITY_ON_HAND = 1;
+
     private final BeerInventoryRepository beerInventoryRepository;
     
     @Override
@@ -35,20 +37,20 @@ public class BeerInventoryBootstrap implements CommandLineRunner {
         beerInventoryRepository.save(BeerInventory.builder()
             .beerId(BEER_1_UUID)
                 .upc(BEER_1_UPC)
-                .quantityOnHand(50)
+                .quantityOnHand(QUANTITY_ON_HAND)
                 .build());
 
         beerInventoryRepository.save(BeerInventory.builder()
             .beerId(BEER_2_UUID)
                 .upc(BEER_2_UPC)
-                .quantityOnHand(50)
+                .quantityOnHand(QUANTITY_ON_HAND)
                 .build()
         );
 
         beerInventoryRepository.saveAndFlush(BeerInventory.builder()
             .beerId(BEER_3_UUID)
                 .upc(BEER_3_UPC)
-                .quantityOnHand(50)
+                .quantityOnHand(QUANTITY_ON_HAND)
                 .build()
         );
 

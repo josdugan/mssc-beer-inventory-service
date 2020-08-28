@@ -30,4 +30,9 @@ public class BeerInventory extends BaseEntity {
         this.upc = upc;
         this.quantityOnHand = quantityOnHand;
     }
+
+    public void addInventory(Integer newInventory) {
+        if (newInventory == null) newInventory = 0;
+        this.quantityOnHand += newInventory;
+    }
 }
