@@ -63,4 +63,19 @@ public class BeerOrderAllocationServiceImpl implements BeerOrderAllocationServic
             }
         });
     }
+
+    @Override
+    public void deallocateOrder(BeerOrderDto beerOrderDto) {
+        beerOrderDto.getBeerOrderLines().forEach(beerOrderLineDto -> {
+            BeerInventory beerInventory = BeerInventory.builder()
+                    .beerId(beerOrderLineDto.getBeerId())
+                    .upc(beerOrderLineDto.getUpc())
+                    .quantityOnHand(beerOrderLineDto.getQuantityAllocated())
+                    .build();
+
+            BeerInventory savedInventory = beerInventoryRepository.save(beerInventory);
+
+            log.debug(String.format("Saved Inventory for beer upc: %1$s inventory id: %2$s", savedInventory.getUpc(), savedInventory.getId()));
+        });
+    }
 }

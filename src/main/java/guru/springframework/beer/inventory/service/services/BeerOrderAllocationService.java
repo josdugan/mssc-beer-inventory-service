@@ -5,4 +5,6 @@ import guru.springframework.brewery.model.BeerOrderDto;
 public interface BeerOrderAllocationService {
 
     Boolean allocateOrder(BeerOrderDto beerOrderDto);
+
+    void deallocateOrder(BeerOrderDto beerOrderDto);
 }
