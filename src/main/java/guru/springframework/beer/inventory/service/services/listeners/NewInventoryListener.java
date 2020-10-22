@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -23,22 +25,25 @@ public class NewInventoryListener {
 
         BeerDto beerDto = newInventoryEvent.getBeerDto();
 
-        BeerInventory beerInventory = beerInventoryRepository.findAllByBeerId(beerDto.getId()).stream().findFirst().get();
+        Optional<BeerInventory> beerInventoryOptional = beerInventoryRepository.findAllByBeerId(beerDto.getId()).stream().findFirst();
 
-        log.debug(String.format("Beer inventory for %1s was %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
+        beerInventoryOptional.ifPresentOrElse(beerInventory -> {
+            log.debug(String.format("Beer inventory for %1s was %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
+            if (beerInventory != null) {
+                beerInventory.addInventory(beerDto.getQuantityOnHand());
+            }
+            log.debug(String.format("After brew event, beer inventory for %1s is %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
 
-        if (beerInventory != null) {
-            beerInventory.addInventory(beerDto.getQuantityOnHand());
-        } else {
-            beerInventory = BeerInventory.builder()
+        }, () -> {
+            BeerInventory beerInventory = beerInventoryRepository.save(BeerInventory.builder()
                     .beerId(beerDto.getId())
                     .upc(beerDto.getUpc())
                     .quantityOnHand(beerDto.getQuantityOnHand())
-                    .build();
-        }
+                    .build());
+            log.debug(String.format("After brew event, beer inventory for %1s is %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
+        });
 
-        log.debug(String.format("AFter brew event, beer inventory for %1s is %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
 
-        beerInventoryRepository.save(beerInventory);
+
     }
 }
