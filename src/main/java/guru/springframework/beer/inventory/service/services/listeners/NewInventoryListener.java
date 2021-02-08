@@ -29,9 +29,7 @@ public class NewInventoryListener {
 
         beerInventoryOptional.ifPresentOrElse(beerInventory -> {
             log.debug(String.format("Beer inventory for %1s was %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
-            if (beerInventory != null) {
-                beerInventory.addInventory(beerDto.getQuantityOnHand());
-            }
+            beerInventory.addInventory(beerDto.getQuantityOnHand());
             log.debug(String.format("After brew event, beer inventory for %1s is %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
 
         }, () -> {
@@ -42,8 +40,5 @@ public class NewInventoryListener {
                     .build());
             log.debug(String.format("After brew event, beer inventory for %1s is %2s", beerDto.getBeerName(), beerInventory.getQuantityOnHand()));
         });
-
-
-
     }
 }
